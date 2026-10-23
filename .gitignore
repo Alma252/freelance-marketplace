@@ -1,0 +1,29 @@
+# Environment & secrets
+.env
+.env.*
+*.pem
+appsettings.Development.json
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Dependencies & builds
+node_modules/
+__pycache__/
+*.pyc
+venv/
+.venv/
+bin/
+obj/
+dist/
+build/
+
+# Logs & local data
+*.log
+*.sqlite3
+*.db
+uploads/
