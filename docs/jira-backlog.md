@@ -1,6 +1,5 @@
 # بک‌لاگ Jira — Marketplace Freelance
 
-(برای کپی کردن در Jira. Assignee را با اسم اعضای تیم پر کنید.)
 
 ## Epicها
 
