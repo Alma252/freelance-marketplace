@@ -15,6 +15,6 @@ PostgreSQL 17 (دیتابیس آزمایشی: `lab_freelance`)
 
 
 ## لینک‌ها
-- Jira: <لینک برد Jira را اینجا قرار دهید>
+- Jira: https://shydaskry6.atlassian.net/jira/software/projects/FM/boards/3?sprintStarted=true&filter=&groupBy=none
 - مستندات نیازمندی‌ها: [docs/requirements.md](docs/requirements.md)
 - بک‌لاگ: [docs/jira-backlog.md](docs/jira-backlog.md)
