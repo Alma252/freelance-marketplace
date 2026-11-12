@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import password_validation
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django.core.exceptions import ValidationError
 
 from .models import User
@@ -89,3 +89,43 @@ class LoginForm(AuthenticationForm):
         self.fields["password"].widget.attrs.update(
             {"class": "input", "dir": "ltr", "autocomplete": "current-password"}
         )
+
+
+class PasswordResetRequestForm(PasswordResetForm):
+    """Step 1 of password recovery: the user types the account e-mail.
+
+    Django generates a signed, time-limited, single-use link (see
+    PASSWORD_RESET_TIMEOUT) and e-mails it. Our users table has no `is_active`
+    column, so we override get_users() to use `status = 'active'` instead.
+    """
+
+    email = forms.EmailField(
+        label="ایمیل",
+        max_length=254,
+        widget=forms.EmailInput(
+            attrs={"autocomplete": "email", "class": "input", "dir": "ltr", "autofocus": True}
+        ),
+    )
+
+    def get_users(self, email):
+        users = User.objects.filter(email__iexact=email.strip(), status=User.STATUS_ACTIVE)
+        return (user for user in users if user.has_usable_password())
+
+
+class SetNewPasswordForm(SetPasswordForm):
+    """Step 2: new password + repeat, with the same validation as sign-up."""
+
+    error_messages = {
+        **SetPasswordForm.error_messages,
+        "password_mismatch": "رمز عبور و تکرار آن یکسان نیستند.",
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["new_password1"].label = "رمز عبور جدید"
+        self.fields["new_password2"].label = "تکرار رمز عبور جدید"
+        for name in ("new_password1", "new_password2"):
+            self.fields[name].widget.attrs.update(
+                {"class": "input", "dir": "ltr", "autocomplete": "new-password"}
+            )
+        self.fields["new_password1"].widget.attrs["autofocus"] = True
