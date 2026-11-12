@@ -1,17 +1,25 @@
 from django.contrib import messages
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_POST
 
 from .forms import SignUpForm
-from .models import User
 
 
 def home(request):
-    """Temporary page (step 2): proves that Django is connected to the database."""
-    return render(request, "home.html", {"users_count": User.objects.count()})
+    """The site root sends people to the right page."""
+    if request.user.is_authenticated:
+        return redirect("accounts:welcome")
+    return redirect("accounts:login")
 
 
 def signup(request):
+    if request.user.is_authenticated:
+        return redirect("accounts:welcome")
+
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -23,9 +31,23 @@ def signup(request):
                 # the unique index of the database has the last word
                 form.add_error("email", "این ایمیل قبلاً ثبت شده است.")
             else:
-                # (step 4 will redirect to the login page instead)
-                messages.success(request, "حساب شما با موفقیت ساخته شد. صفحه ورود در مرحله بعد اضافه می‌شود.")
-                return redirect("accounts:home")
+                messages.success(request, "حساب شما با موفقیت ساخته شد. اکنون وارد شوید.")
+                return redirect("accounts:login")
     else:
         form = SignUpForm()
     return render(request, "accounts/signup.html", {"form": form})
+
+
+@never_cache
+@login_required
+def welcome(request):
+    """Temporary page shown after a successful login (login required)."""
+    return render(request, "accounts/welcome.html")
+
+
+@require_POST
+def logout_view(request):
+    """Ends the session. POST only (the logout button is a small form)."""
+    logout(request)
+    messages.success(request, "با موفقیت از حساب خود خارج شدید.")
+    return redirect("accounts:login")

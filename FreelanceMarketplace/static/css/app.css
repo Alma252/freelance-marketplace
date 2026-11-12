@@ -22,3 +22,8 @@ label { display: block; font-weight: 600; margin-bottom: .25rem; }
 a { color: var(--primary); }
 .links { margin-top: 1rem; font-size: .95rem; display: flex; flex-direction: column; gap: .35rem; }
 @media (max-width: 480px) { main { margin: 1rem auto; } .card { padding: 1.1rem; } }
+.password-wrap { display: flex; gap: .5rem; }
+.password-wrap .input { flex: 1; min-width: 0; }
+.toggle-password { background: #e5e7eb; color: var(--text); border: 0; border-radius: 8px; padding: 0 .9rem; font: inherit; cursor: pointer; }
+.toggle-password:hover { background: #d1d5db; }
+.toggle-password:focus { outline: 3px solid #93c5fd; outline-offset: 1px; }

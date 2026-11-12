@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}خوش آمدید | Marketplace Freelance{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>خوش آمدید، {{ user.get_full_name }}</h1>
+  <p>شناسه کاربر: <strong dir="ltr">{{ user.id }}</strong></p>
+  <p>ایمیل: <span dir="ltr">{{ user.email }}</span></p>
+  <p class="help">این صفحه موقت است و فقط برای کاربران واردشده قابل مشاهده است.</p>
+  <form method="post" action="{% url 'accounts:logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-block">خروج</button>
+  </form>
+</div>
+{% endblock %}

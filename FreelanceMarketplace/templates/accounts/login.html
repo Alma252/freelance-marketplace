@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}ورود | Marketplace Freelance{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>ورود به حساب</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {% include "accounts/_form_fields.html" %}
+    <button type="submit" class="btn btn-block">ورود</button>
+  </form>
+  <div class="links">
+    <a href="{% url 'accounts:signup' %}">ایجاد حساب جدید</a>
+  </div>
+</div>
+{% endblock %}

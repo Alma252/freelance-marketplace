@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import password_validation
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
 from .models import User
@@ -66,3 +67,25 @@ class SignUpForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class LoginForm(AuthenticationForm):
+    """E-mail + password login. One generic message for every failure, so the
+    page never reveals whether the e-mail or the password was wrong (or whether
+    the account exists / is blocked)."""
+
+    error_messages = {
+        "invalid_login": "ایمیل یا رمز عبور اشتباه است.",
+        "inactive": "ایمیل یا رمز عبور اشتباه است.",
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].label = "ایمیل"
+        self.fields["username"].widget.attrs.update(
+            {"class": "input", "dir": "ltr", "autocomplete": "email", "autofocus": True}
+        )
+        self.fields["password"].label = "رمز عبور"
+        self.fields["password"].widget.attrs.update(
+            {"class": "input", "dir": "ltr", "autocomplete": "current-password"}
+        )
